@@ -1,6 +1,6 @@
 [project]
 name = "narrative-intelligence-mcp"
-version = "0.1.1"
+version = "0.1.2"
 description = "MCP server for AletaIndex — financial narrative intelligence for AI agents"
 readme = "README.md"
 requires-python = ">=3.10"

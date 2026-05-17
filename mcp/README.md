@@ -141,4 +141,4 @@ Then use `narrative-intelligence-mcp` as the command instead of `uvx narrative-i
 
 ## Prefer REST API?
 
-→ [API Reference](../docs/api-reference.md)
+→ [API Reference](https://github.com/AletaIndex/aletaindex-fin-narratives/blob/main/docs/api-reference.md)
