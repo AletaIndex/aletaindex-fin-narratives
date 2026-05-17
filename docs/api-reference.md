@@ -1,18 +1,21 @@
 # API Reference
 
-Base URL: `https://aletaindex-narrative.com`
+**Base URL:** `https://aletaindex-narrative.com`
 
-All endpoints (except registration) require:
+All endpoints require an API key in the request header:
 ```
 X-API-Key: nk_your_key_here
 ```
+
+Get a key at [aletaindex-narrative.com](https://aletaindex-narrative.com).
 
 ---
 
 ## Endpoints
 
 ### 1. Comprehensive Narratives
-**The main endpoint.** Returns the full narrative hierarchy for one or more tickers.
+
+The main data endpoint. Returns the full narrative hierarchy for one or more tickers: global narratives, daily topic clusters, individual articles, and sentiment scores.
 
 ```
 GET /v1/narratives/comprehensive
@@ -23,50 +26,81 @@ GET /v1/narratives/comprehensive
 | Parameter | Type | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
 | `tickers` | string | Yes | — | Comma-separated tickers, max 10. e.g. `NVDA,TSLA` |
-| `from_date` | date | No | — | Start date `YYYY-MM-DD` |
-| `to_date` | date | No | — | End date `YYYY-MM-DD` |
-| `days` | int | No | 30 | Lookback days (overridden by from/to_date) |
-| `all_time` | bool | No | false | Return full history |
-| `article_limit` | int | No | 100 | Max articles per ticker |
+| `from_date` | date | No | 7 days ago | Start date `YYYY-MM-DD` |
+| `to_date` | date | No | today | End date `YYYY-MM-DD` |
+| `all_time` | bool | No | false | Use full available history (ignores `from_date`) |
+| `top_articles_per_daily_topic` | int | No | — | Limit articles per daily topic (e.g. `10`). Use this to reduce response size when you only need representative headlines |
 | `article_sort_by` | string | No | `representativeness` | `representativeness` or `time` |
-| `source` | string | No | — | Filter by news source name |
-| `min_relevance` | float | No | — | Min ticker relevance score (0–1) |
-| `min_sentiment` | float | No | — | Min sentiment score (-1–1) |
-| `max_sentiment` | float | No | — | Max sentiment score (-1–1) |
-| `narrative_id` | int | No | — | Filter to a specific narrative |
-| `include_aggregation` | bool | No | false | Include sentiment aggregation stats |
+| `source` | string | No | — | Filter articles by source domain (e.g. `reuters.com`) |
+| `min_relevance` | float | No | — | Min ticker relevance score `0.0–1.0` |
+| `min_sentiment` | float | No | — | Min sentiment score `-1.0–1.0` |
+| `max_sentiment` | float | No | — | Max sentiment score `-1.0–1.0` |
+| `narrative_id` | int | No | — | Filter to a specific global narrative ID |
+| `include_aggregation` | bool | No | false | Include daily sentiment aggregation per ticker |
+| `paginate` | bool | No | false | For UI lazy loading only. Returns articles in pages using `article_limit` + `article_offset`. Not needed for standard use — the default returns all articles |
+| `article_limit` | int | No | — | Articles per page (max 100). Only used with `paginate=true` |
+| `article_offset` | int | No | 0 | Page offset. Only used with `paginate=true` |
 
 **Example**
 ```bash
-curl "https://aletaindex-narrative.com/v1/narratives/comprehensive?tickers=NVDA&days=7" \
+curl "https://aletaindex-narrative.com/v1/narratives/comprehensive?tickers=NVDA&from_date=2026-05-01&to_date=2026-05-10" \
   -H "X-API-Key: nk_your_key_here"
 ```
 
 **Response**
 ```json
 {
-  "query": {
+  "query_summary": {
     "tickers": ["NVDA"],
-    "from_date": "2026-03-09",
-    "to_date": "2026-03-16"
+    "timeframe": {
+      "from_date": "2026-05-01",
+      "to_date": "2026-05-10",
+      "days": 10
+    },
+    "requested_at": "2026-05-10T08:00:00+00:00"
   },
   "results": [
     {
       "ticker": "NVDA",
-      "timeframe": { "from": "2026-03-09", "to": "2026-03-16" },
-      "counts": {
+      "timeframe": { "from_date": "2026-05-01", "to_date": "2026-05-10" },
+      "summary": {
         "global_narrative_count": 5,
         "daily_topic_count": 23,
-        "article_count": 187
+        "article_count": 187,
+        "source_count": 42
       },
-      "insights": { ... },
       "global_narratives": [
         {
           "id": 42,
           "title": "AI Infrastructure Supercycle",
-          "sentiment": { "avg_sentiment": 0.68, "label": "positive" },
-          "metadata": { "daily_topic_count": 8, "article_count": 47 },
-          "daily_topics": [ ... ]
+          "is_active": true,
+          "sentiment": {
+            "avg_sentiment": 0.68,
+            "label": "positive"
+          },
+          "metadata": {
+            "daily_topic_count": 8,
+            "article_count": 47,
+            "first_seen": "2026-03-01",
+            "last_seen": "2026-05-10"
+          },
+          "daily_topics": [
+            {
+              "id": 1024,
+              "event_date": "2026-05-10",
+              "dominance_score": 0.72,
+              "article_count": 12,
+              "articles": [
+                {
+                  "title": "NVIDIA's H100 demand surges as hyperscalers expand AI capacity",
+                  "source": "reuters.com",
+                  "published_at": "2026-05-10T09:15:00Z",
+                  "sentiment_score": 0.74,
+                  "ticker_relevance_score": 0.92
+                }
+              ]
+            }
+          ]
         }
       ]
     }
@@ -76,136 +110,63 @@ curl "https://aletaindex-narrative.com/v1/narratives/comprehensive?tickers=NVDA&
 
 ---
 
-### 2. Global Narratives
-Returns the active narratives for a ticker with article samples.
+### 2. Portfolio Narrative Risk
+
+Analyzes narrative risk across a portfolio. Groups narratives by macro theme and identifies which stories create concentrated exposure across multiple holdings simultaneously.
 
 ```
-GET /v1/narratives/global-narratives
+POST /v1/portfolio/narrative-risk
 ```
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `ticker` | string | Required | Single ticker |
-| `days` | int | 30 | Lookback (max 730, null = all time) |
-| `limit` | int | 20 | Max narratives (max 100) |
-| `include_articles` | bool | true | Include representative articles |
-
----
-
-### 3. Narrative Timeline
-Aggregated sentiment and mention volume over time.
-
-```
-GET /v1/narratives/timeline
-```
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `ticker` | string | Required | — |
-| `days` | int | — | null = all time |
-
-**Returns**: per-date sentiment, article counts, top 5 narratives with daily breakdowns, key events.
-
----
-
-### 4. Granular Timeline
-Sub-daily narrative data at configurable intervals.
-
-```
-GET /v1/narratives/timeline-granular
-```
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `ticker` | string | Required | — |
-| `days` | int | — | — |
-| `interval_minutes` | int | 60 | `1`, `15`, `30`, `60`, `240`, `1440` |
-
----
-
-### 5. LLM Insights
-AI-generated analysis: summary, key insights, anomalies, narrative correlations.
-
-```
-GET /v1/narratives/insights
-```
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `ticker` | string | Required | — |
-| `days` | int | 30 | `7`, `30`, `90`, `180`, `365`, or null |
-
-**Returns**: `summary`, `key_insights`, `anomalies`, `correlations`, `behavioral_patterns`
-
-Pre-generated for standard time ranges. Custom ranges generated on-demand.
-
----
-
-### 6. Summary
-Quick counts and recent events for a ticker.
-
-```
-GET /v1/narratives/summary
-```
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `ticker` | string | Required | — |
-| `days` | int | 30 | null = all time |
-
----
-
-### 7. Daily Topics
-Day-level narrative events, filterable by global narrative.
-
-```
-GET /v1/narratives/daily-topics
-```
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `ticker` | string | Required | — |
-| `global_narrative_id` | int | — | Filter to one narrative |
-| `from_date` | date | — | — |
-| `to_date` | date | — | — |
-| `days` | int | 30 | — |
-| `limit` | int | 50 | max 200 |
-| `include_articles` | bool | true | — |
-
----
-
-### 8. Price Data
-OHLCV price data for a ticker.
-
-```
-GET /v1/narratives/price
-```
-
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `ticker` | string | Required | — |
-| `days` | int | — | null = all time |
-| `interval_minutes` | int | 1 | `1`, `15`, `30`, `60`, `240`, `1440` |
-
-**Returns**: `timestamp_ms`, `datetime_utc`, `open`, `high`, `low`, `close`, `volume`, `daily_return`
-
----
-
-### 9. Register
-Create a new account. Free tier activated immediately.
-
-```
-POST /v1/customers/register
-```
-
+**Request Body**
 ```json
 {
-  "customer_name": "Your Name",
-  "email": "you@example.com"
+  "holdings": [
+    { "ticker": "NVDA", "weight": 0.30 },
+    { "ticker": "AAPL", "weight": 0.25 },
+    { "ticker": "TSLA", "weight": 0.20 },
+    { "ticker": "MSFT", "weight": 0.25 }
+  ]
 }
 ```
 
-API key delivered by email.
+| Field | Type | Description |
+|-------|------|-------------|
+| `holdings` | array | Portfolio positions. Max 50. |
+| `holdings[].ticker` | string | Ticker symbol |
+| `holdings[].weight` | float | Portfolio allocation fraction (0–1, should sum to ~1.0) |
+
+**Example**
+```bash
+curl -X POST "https://aletaindex-narrative.com/v1/portfolio/narrative-risk" \
+  -H "X-API-Key: nk_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{"holdings": [{"ticker": "NVDA", "weight": 0.5}, {"ticker": "AAPL", "weight": 0.5}]}'
+```
+
+**Response**
+```json
+{
+  "narratives": [
+    {
+      "theme": "AI Infrastructure & Compute",
+      "tickers": ["NVDA", "MSFT"],
+      "exposure_pct": 0.55,
+      "dominance": 0.72,
+      "trajectory": "ESCALATING",
+      "momentum_delta": 0.08,
+      "narrative_ids": [42, 17],
+      "ticker_narratives": {
+        "NVDA": [{ "id": 42, "title": "AI Infrastructure Supercycle" }],
+        "MSFT": [{ "id": 17, "title": "Azure AI Buildout" }]
+      }
+    }
+  ],
+  "top_risk": "AI Infrastructure & Compute",
+  "uncovered_tickers": [],
+  "credits_used": 8
+}
+```
 
 ---
 
@@ -214,19 +175,21 @@ API key delivered by email.
 | Code | Meaning |
 |------|---------|
 | `401` | Missing or invalid API key |
-| `403` | Account inactive or expired |
-| `429` | Rate limit exceeded (free tier: 100/day) |
+| `403` | Ticker or feature requires Plus/Scale tier |
 | `422` | Invalid parameters |
+| `429` | Rate limit exceeded |
 | `500` | Server error |
 
 ---
 
-## Free Tier Limits
+## Tier Limits
 
-| Limit | Value |
-|-------|-------|
-| Tickers | TSLA only |
-| History | Last 1 day |
-| Calls/day | 100 |
+| Tier | Tickers | History | Credits |
+|------|---------|---------|---------|
+| **Free Trial** | 10 (TSLA, NVDA, AAPL, MSFT, AMZN, GOOGL, META, AMD, NFLX, JPM) | 90 days | 500 total |
+| **Plus** | All 109 | 180 days | 2,500/month |
+| **Scale** | All 109 | Full history | Unlimited |
 
-Upgrade to Pro for full access → [narrative-intelligence.com/register](https://aletaindex-narrative.com/register)
+Credits are consumed per ticker per day queried via `/v1/narratives/comprehensive` and `/v1/portfolio/narrative-risk`.
+
+[→ Upgrade at aletaindex-narrative.com/subscription](https://aletaindex-narrative.com/subscription)

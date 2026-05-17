@@ -1,16 +1,15 @@
 # Strategy Prompt Templates
 
-Copy-paste these prompts into any agent with Narrative Intelligence connected.
+Copy-paste these prompts into any agent with AletaIndex connected.
 
 ---
 
 ## Daily Market Briefing
 
 ```
-Give me a morning briefing on NVDA and TSLA.
+Give me a morning briefing on NVDA and TSLA for the last 7 days.
 For each ticker: what are the dominant narratives,
-what's the sentiment trend over the last 7 days,
-and are there any anomalies I should know about?
+what's the overall sentiment, and are there any narratives gaining or fading?
 ```
 
 ---
@@ -18,9 +17,9 @@ and are there any anomalies I should know about?
 ## Narrative Momentum Signal
 
 ```
-For NVDA, compare the narrative landscape today vs 14 days ago.
-Which narratives have gained dominance? Which have faded?
-Is there a sentiment divergence from price action?
+For NVDA, compare the narrative landscape over the last 14 days.
+Which narratives have the highest article count? Which have the strongest positive sentiment?
+Is there any narrative that looks like it's escalating?
 ```
 
 ---
@@ -28,9 +27,9 @@ Is there a sentiment divergence from price action?
 ## Earnings Narrative Tracker
 
 ```
-What narratives are building around AAPL heading into earnings?
+What narratives are building around AAPL over the last 30 days?
 Focus on: analyst expectations, product cycle, and macro exposure.
-What's the sentiment trajectory over the last 30 days?
+What's the sentiment on each narrative?
 ```
 
 ---
@@ -45,14 +44,14 @@ Where are they diverging, and what might that signal?
 
 ---
 
-## Anomaly Alert Review
+## Portfolio Narrative Risk
 
 ```
-Check TSLA, NVDA, and META for any high-severity narrative anomalies
-in the last 7 days. For each anomaly, tell me:
-- What happened
-- Which narrative it's in
-- Whether the sentiment shift was positive or negative
+Analyze narrative risk across my portfolio:
+NVDA 30%, AAPL 25%, TSLA 20%, MSFT 25%
+
+Which macro themes create concentrated exposure across multiple holdings?
+Which narratives have the most negative sentiment?
 ```
 
 ---
@@ -67,21 +66,21 @@ Sort by ticker relevance score and show me the top 5 headlines.
 
 ---
 
-## Narrative vs Price Divergence
+## Sector Sweep
 
 ```
-Pull NVDA's narrative sentiment trend and price data for the last 30 days.
-Identify any periods where sentiment was rising but price was falling,
-or vice versa. These divergences are potential mean-reversion signals.
+Get a quick narrative summary for the 10 free tickers:
+TSLA, NVDA, AAPL, MSFT, AMZN, GOOGL, META, AMD, NFLX, JPM.
+For each: dominant narrative, sentiment label, and article count.
+Which ticker has the most negative sentiment right now?
 ```
 
 ---
 
-## Sector Sweep
+## Narrative Sentiment Shift
 
 ```
-Get a quick narrative summary for all 8 tickers:
-TSLA, NVDA, AMD, AAPL, MSFT, AMZN, GOOGL, META.
-For each: dominant narrative, sentiment label, and article count.
-Flag any tickers with high-severity anomalies.
+For TSLA, look at the last 30 days of narratives.
+Have any narratives shifted from negative to positive sentiment (or vice versa)?
+What articles are driving those shifts?
 ```
