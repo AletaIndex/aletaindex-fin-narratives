@@ -180,6 +180,7 @@ def get_narratives(
         "tickers": tickers,
         "from_date": from_date,
         "to_date": to_date,
+        "include_insight": "false",
     })
 
 
