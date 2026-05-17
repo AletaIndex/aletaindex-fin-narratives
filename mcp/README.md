@@ -1,6 +1,6 @@
 # MCP Quickstart
 
-Connect Narrative Intelligence to any MCP-compatible AI agent in under 2 minutes.
+Connect AletaIndex to any MCP-compatible AI agent in under 2 minutes.
 
 **Compatible with:** Claude Code, Cursor, Windsurf, and any MCP-supporting tool.
 
@@ -8,9 +8,9 @@ Connect Narrative Intelligence to any MCP-compatible AI agent in under 2 minutes
 
 ## Step 1 — Get an API Key
 
-[Register for free at aletaindex-narrative.com](https://aletaindex-narrative.com/register)
+[Sign up at aletaindex-narrative.com](https://aletaindex-narrative.com)
 
-Free tier includes: TSLA, last 1 day, 100 calls/day.
+Free trial: 10 tickers, 90 days history, 500 credits.
 
 ---
 
@@ -23,7 +23,7 @@ Add to `~/.claude/settings.json`:
 ```json
 {
   "mcpServers": {
-    "narrative-intelligence": {
+    "aletaindex": {
       "command": "uvx",
       "args": ["narrative-intelligence-mcp"],
       "env": {
@@ -36,14 +36,14 @@ Add to `~/.claude/settings.json`:
 
 Restart Claude Code. Done.
 
-### Cursor
+### Cursor / Windsurf
 
-Add to your Cursor MCP config:
+Add to your MCP config file:
 
 ```json
 {
   "mcpServers": {
-    "narrative-intelligence": {
+    "aletaindex": {
       "command": "uvx",
       "args": ["narrative-intelligence-mcp"],
       "env": {
@@ -65,15 +65,11 @@ What narratives are driving NVDA this week?
 ```
 
 ```
-Has TSLA's sentiment shifted in the last 3 days?
+Has TSLA sentiment shifted in the last 3 days?
 ```
 
 ```
-Show me the dominant narrative for AAPL and compare it to last month.
-```
-
-```
-Are there any anomalies in AMD's narrative coverage today?
+Analyze narrative risk across my portfolio: NVDA 30%, AAPL 25%, TSLA 20%, MSFT 25%
 ```
 
 The agent automatically calls the right tools and formats the response.
@@ -82,41 +78,31 @@ The agent automatically calls the right tools and formats the response.
 
 ## Available Tools
 
-Once connected, your agent has access to:
-
 | Tool | Description |
 |------|-------------|
-| `get_narratives` | Full narrative hierarchy: global narratives → daily topics → articles |
-| `get_insights` | LLM-generated analysis: summary, anomalies, correlations, trends |
-| `get_timeline` | Sentiment and mention volume over time |
-| `get_price` | OHLCV price data with daily returns |
+| `get_narratives` | Full narrative hierarchy for one or more tickers: global narratives, daily topic clusters, articles, and sentiment scores |
+| `get_portfolio_risk` | Macro risk theme analysis across a portfolio — identifies which narratives create concentrated exposure across multiple holdings |
 
 ---
 
 ## Example Agent Session
 
 ```
-You: What's the market narrative situation for NVDA right now?
+You: What's the narrative situation for NVDA right now?
 
-Agent: [calls get_narratives(ticker="NVDA", days=7)]
-       [calls get_insights(ticker="NVDA", days=7)]
+Agent: [calls get_narratives(tickers="NVDA", from_date="2026-05-03", to_date="2026-05-10")]
 
-NVDA — Last 7 Days Narrative Summary
+NVDA — Last 7 Days
 
 Active Narratives (5):
-1. AI Infrastructure Supercycle — +0.68 sentiment, 47 articles, ACCELERATING
+1. AI Infrastructure Supercycle — +0.68 sentiment, 47 articles, ESCALATING
 2. Export Control Headwinds — -0.41 sentiment, 23 articles, stable
-3. Data Center Capex Cycle — +0.55 sentiment, 18 articles, new spike Mar 14
+3. Data Center Capex Cycle — +0.55 sentiment, 18 articles, new spike May 7
 4. Blackwell GPU Supply Chain — +0.31 sentiment, 12 articles, stable
 5. China Market Access — -0.22 sentiment, 8 articles, declining
 
-Key Insight: Data Center Capex surged +340% in mentions on Mar 14,
-likely spillover from MSFT earnings. Positive sentiment divergence
-from Export Control narrative suggests market is discounting
-regulatory risk.
-
-Anomaly: Sentiment flipped from -0.3 to +0.6 on Mar 12 within
-the Export Control narrative — possible regulatory news catalyst.
+Sentiment on "Export Control Headwinds" improved +0.12 over the week,
+suggesting the market is discounting near-term regulatory risk.
 ```
 
 ---
@@ -133,14 +119,14 @@ Then use `narrative-intelligence-mcp` as the command instead of `uvx narrative-i
 
 ## Troubleshooting
 
-**"No tools available"** — Check that your API key is set correctly in the env config.
+**"NARRATIVE_API_KEY is not set"** — Add your API key to the `env` section of your MCP config.
 
-**"Free tier limit exceeded"** — You've hit 100 calls/day. [Upgrade to Pro](https://aletaindex-narrative.com/register).
+**"Rate limit exceeded"** — You've used all your credits. [Upgrade at aletaindex-narrative.com/subscription](https://aletaindex-narrative.com/subscription).
 
-**"Ticker not available on free tier"** — Free tier is TSLA only. [Upgrade to Pro](https://aletaindex-narrative.com/register) for all 8 tickers.
+**"Access denied: Ticker X requires Plus tier"** — This ticker is not included in the free tier. [Upgrade at aletaindex-narrative.com/subscription](https://aletaindex-narrative.com/subscription). Free tickers: TSLA, NVDA, AAPL, MSFT, AMZN, GOOGL, META, AMD, NFLX, JPM.
 
 ---
 
 ## Prefer REST API?
 
-→ [Direct API Guide](../docs/direct-api-guide.md)
+→ [API Reference](../docs/api-reference.md)

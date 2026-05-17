@@ -1,7 +1,7 @@
 [project]
 name = "narrative-intelligence-mcp"
 version = "0.1.0"
-description = "MCP server for Narrative Intelligence — financial narrative tracking for AI agents"
+description = "MCP server for AletaIndex — financial narrative intelligence for AI agents"
 requires-python = ">=3.10"
 dependencies = [
     "mcp[cli]>=1.0.0",
@@ -9,8 +9,17 @@ dependencies = [
 ]
 
 [project.scripts]
-narrative-intelligence-mcp = "narrative_intelligence_mcp.server:mcp.run"
+narrative-intelligence-mcp = "server:mcp.run"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "respx>=0.21",
+]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+include = ["server.py"]
