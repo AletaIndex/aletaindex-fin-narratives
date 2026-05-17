@@ -92,7 +92,7 @@ response = requests.get(
     params={"tickers": "NVDA,AMD,TSLA", "from_date": "2026-05-01", "to_date": "2026-05-10"}
 )
 for result in response.json()["results"]:
-    print(f"{result['ticker']}: {result['counts']['global_narrative_count']} narratives")
+    print(f"{result['ticker']}: {result['summary']['global_narrative_count']} narratives")
 ```
 
 ### Analyze portfolio narrative risk
@@ -112,8 +112,8 @@ response = requests.post(
     json={"holdings": holdings}
 )
 
-for theme in response.json()["themes"]:
-    print(f"{theme['theme']}: {theme['tickers']} — {theme['sentiment']}")
+for theme in response.json()["narratives"]:
+    print(f"{theme['theme']}: {theme['tickers']} — {theme['trajectory']}")
 ```
 
 ### Use full history
