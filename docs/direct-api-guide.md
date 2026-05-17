@@ -133,7 +133,7 @@ response = requests.get(
 |------|---------|---------|---------|
 | Free Trial | 500 (one-time) | 90 days | 10 (TSLA, NVDA, AAPL, MSFT, AMZN, GOOGL, META, AMD, NFLX, JPM) |
 | Plus | 2,500/month | 180 days | All 109 |
-| Scale | Unlimited | Full history | All 109 |
+| Scale | Custom | Full history | All 109 |
 
 Credits are consumed per ticker per day queried. When you exceed your credits, the API returns `HTTP 429`.
 

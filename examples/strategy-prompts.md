@@ -2,6 +2,8 @@
 
 Copy-paste these prompts into any agent with AletaIndex connected.
 
+These are just starting points — feel free to ask in your own words. The agent understands natural language questions about narratives, sentiment, and portfolio risk. You're not limited to the templates below.
+
 ---
 
 ## Daily Briefing

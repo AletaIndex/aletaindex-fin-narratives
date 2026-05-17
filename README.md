@@ -43,7 +43,7 @@ Direct HTTP calls. Works with any language or framework.
 |------|---------|---------|---------|-------|
 | **Free Trial** | 10 tickers | 90 days | 500 (one-time) | Free, 7 days |
 | **Plus** | All 109 tickers | 180 days | 2,500/month | $99/mo |
-| **Scale** | All 109 tickers | Full history | Unlimited | Custom — [contact us](https://aletaindex-narrative.com) |
+| **Scale** | All 109 tickers | Full history | Custom | Custom — [contact us](https://aletaindex-narrative.com) |
 
 Free tickers: `TSLA` `NVDA` `AAPL` `MSFT` `AMZN` `GOOGL` `META` `AMD` `NFLX` `JPM`
 

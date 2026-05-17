@@ -188,7 +188,7 @@ curl -X POST "https://aletaindex-narrative.com/v1/portfolio/narrative-risk" \
 |------|---------|---------|---------|
 | **Free Trial** | 10 (TSLA, NVDA, AAPL, MSFT, AMZN, GOOGL, META, AMD, NFLX, JPM) | 90 days | 500 total |
 | **Plus** | All 109 | 180 days | 2,500/month |
-| **Scale** | All 109 | Full history | Unlimited |
+| **Scale** | All 109 | Full history | Custom |
 
 Credits are consumed per ticker per day queried via `/v1/narratives/comprehensive` and `/v1/portfolio/narrative-risk`.
 
