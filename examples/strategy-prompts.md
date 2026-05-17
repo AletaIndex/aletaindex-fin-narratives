@@ -78,6 +78,18 @@ What does the divergence tell you about how the market is differentiating them?
 
 ---
 
+## What Actually Happened This Week
+
+```
+For TSLA, pull the last 7 days of narratives.
+Which narratives are brand new this week — just emerged?
+Which are ongoing threads that got fresh coverage this week?
+For the most active ones, which specific days had the most articles,
+and what triggered the spike?
+```
+
+---
+
 ## Sector Sweep
 
 ```

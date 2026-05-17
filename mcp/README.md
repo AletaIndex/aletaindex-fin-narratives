@@ -14,6 +14,18 @@ Free trial: 10 tickers, 90 days history, 500 credits.
 
 ---
 
+## Prerequisites — Install `uv`
+
+The MCP server runs via `uvx`, which is part of [`uv`](https://docs.astral.sh/uv/) — a fast Python package manager. If you don't have it yet:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+Then restart your terminal. `uvx` will be available automatically. No other setup needed.
+
+---
+
 ## Step 2 — Add to Your Agent Config
 
 ### Claude Code
