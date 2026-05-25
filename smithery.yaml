@@ -1,0 +1,18 @@
+name: AletaIndex Narrative Intelligence
+description: Financial narrative intelligence for AI agents — real-time narrative tracking, sentiment, and insights for 109 US equities via MCP.
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      apiKey:
+        type: string
+        description: Your AletaIndex API key. Get one free at https://aletaindex-narrative.com
+    required:
+      - apiKey
+  commandFunction: |-
+    (config) => ({
+      command: "uvx",
+      args: ["narrative-intelligence-mcp"],
+      env: { NARRATIVE_API_KEY: config.apiKey }
+    })

@@ -1,5 +1,9 @@
 # AletaIndex Narrative Intelligence API
 
+[![PyPI](https://img.shields.io/pypi/v/narrative-intelligence-mcp?label=PyPI&color=blue)](https://pypi.org/project/narrative-intelligence-mcp/)
+[![Python](https://img.shields.io/pypi/pyversions/narrative-intelligence-mcp)](https://pypi.org/project/narrative-intelligence-mcp/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 **Give your AI agent a financial narrative brain.**
 
 AletaIndex tracks how financial stories evolve across thousands of news sources in real time — clustering articles into structured narratives, measuring sentiment momentum, and mapping narrative risk across portfolios. Available for 109 tickers across all major sectors.
@@ -67,6 +71,54 @@ response = requests.get(
 data = response.json()
 for narrative in data["results"][0]["global_narratives"]:
     print(narrative["title"], narrative["sentiment"]["avg_sentiment"])
+```
+
+**Example response (truncated):**
+
+```json
+{
+  "results": [
+    {
+      "ticker": "NVDA",
+      "global_narratives": [
+        {
+          "narrative_id": 142,
+          "title": "AI Infrastructure Supercycle",
+          "dominance_score": 0.847,
+          "is_active": true,
+          "daily_topics": [
+            {
+              "event_date": "2026-05-10",
+              "article_count": 14,
+              "sentiment": {
+                "avg_sentiment": 0.71,
+                "sentiment_label": "Positive",
+                "trajectory": "Escalating"
+              }
+            }
+          ]
+        },
+        {
+          "narrative_id": 89,
+          "title": "Export Control Headwinds",
+          "dominance_score": 0.312,
+          "is_active": true,
+          "daily_topics": [
+            {
+              "event_date": "2026-05-10",
+              "article_count": 6,
+              "sentiment": {
+                "avg_sentiment": -0.38,
+                "sentiment_label": "Negative",
+                "trajectory": "Stable"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
 ```
 
 ---
