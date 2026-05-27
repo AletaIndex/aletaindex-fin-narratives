@@ -3,12 +3,16 @@
 [![PyPI](https://img.shields.io/pypi/v/narrative-intelligence-mcp?label=PyPI&color=blue)](https://pypi.org/project/narrative-intelligence-mcp/)
 [![Python](https://img.shields.io/pypi/pyversions/narrative-intelligence-mcp)](https://pypi.org/project/narrative-intelligence-mcp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Smithery](https://smithery.ai/badge/jamie-vw4h/aletaindex)](https://smithery.ai/server/jamie-vw4h/aletaindex)
+[![Glama](https://img.shields.io/badge/Glama-MCP_Directory-orange)](https://glama.ai/mcp/servers/AletaIndex/aletaindex-fin-narratives)
 
 **Give your AI agent a financial narrative brain.**
 
 AletaIndex tracks how financial stories evolve across thousands of news sources in real time — clustering articles into structured narratives, measuring sentiment momentum, and mapping narrative risk across portfolios. Available for 109 tickers across all major sectors.
 
 Instead of raw news feeds or simple sentiment scores, your agent gets **narrative-level intelligence**: what the market is talking about, how strongly, and whether it's shifting.
+
+![Dominant Narrative Evolution — TSLA 180-day view showing 5 persistent narrative threads, article volume, and daily return overlay](docs/narrative-evolution-chart.png)
 
 ---
 
@@ -29,13 +33,17 @@ No prompt engineering required. The agent knows how to query the data automatica
 
 ---
 
-## Two Ways to Integrate
+## Three Ways to Integrate
 
-### Option A — MCP Server (Recommended for AI Agents)
-One-line config. Works with Claude Code, Cursor, Windsurf, and any MCP-compatible agent.
+### Option A — MCP Directories (Zero install, recommended)
+One click on Smithery or Glama. Works with Claude, Cursor, Windsurf, and any MCP-compatible agent — no local setup required.
+→ [Add on Smithery](https://smithery.ai/server/jamie-vw4h/aletaindex) · [Add on Glama](https://glama.ai/mcp/servers/AletaIndex/aletaindex-fin-narratives)
+
+### Option B — MCP Server via PyPI (Local install)
+One-line config via `uvx`. Works with Claude Code, Cursor, Windsurf, and any MCP-compatible agent.
 → [MCP Quickstart](mcp/README.md)
 
-### Option B — REST API
+### Option C — REST API
 Direct HTTP calls. Works with any language or framework.
 → [API Reference](docs/api-reference.md)
 

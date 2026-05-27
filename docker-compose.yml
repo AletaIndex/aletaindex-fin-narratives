@@ -1,0 +1,8 @@
+services:
+  mcp_sse:
+    build:
+      context: mcp
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8002:8002"

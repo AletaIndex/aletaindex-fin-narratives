@@ -1,16 +1,25 @@
 """AletaIndex MCP server — financial narrative intelligence for AI agents."""
 
+import contextvars
 import os
 import re
 from datetime import date, timedelta
 from typing import Optional
+from urllib.parse import parse_qs
 
 import httpx
 from mcp.server.fastmcp import FastMCP
+from mcp.server.transport_security import TransportSecuritySettings
 
 BASE_URL = "https://aletaindex-narrative.com"
 
-mcp = FastMCP("AletaIndex Narrative Intelligence")
+mcp = FastMCP(
+    "AletaIndex Narrative Intelligence",
+    transport_security=TransportSecuritySettings(enable_dns_rebinding_protection=False),
+)
+
+# Per-request API key for SSE mode (set by middleware from X-API-Key header)
+_request_api_key: contextvars.ContextVar[str] = contextvars.ContextVar("request_api_key", default="")
 
 
 # ── Validation helpers ──────────────────────────────────────────────────────
@@ -90,13 +99,18 @@ def _raise_api_error(e: httpx.HTTPStatusError) -> None:
     raise ValueError(f"API error ({status}): {detail or 'please try again later.'}")
 
 
-def _get(path: str, params: dict) -> dict:
-    api_key = os.environ.get("NARRATIVE_API_KEY", "")
-    if not api_key:
+def _get_api_key() -> str:
+    key = _request_api_key.get() or os.environ.get("NARRATIVE_API_KEY", "")
+    if not key:
         raise ValueError(
             "NARRATIVE_API_KEY is not set. "
             "Get a key at https://aletaindex-narrative.com and set it in your environment."
         )
+    return key
+
+
+def _get(path: str, params: dict) -> dict:
+    api_key = _get_api_key()
     params = {k: v for k, v in params.items() if v is not None}
     try:
         r = httpx.get(
@@ -118,12 +132,7 @@ def _get(path: str, params: dict) -> dict:
 
 
 def _post(path: str, body: dict) -> dict:
-    api_key = os.environ.get("NARRATIVE_API_KEY", "")
-    if not api_key:
-        raise ValueError(
-            "NARRATIVE_API_KEY is not set. "
-            "Get a key at https://aletaindex-narrative.com and set it in your environment."
-        )
+    api_key = _get_api_key()
     try:
         r = httpx.post(
             f"{BASE_URL}{path}",
@@ -207,5 +216,38 @@ def get_portfolio_risk(holdings: str) -> dict:
     return _post("/v1/portfolio/narrative-risk", {"holdings": parsed})
 
 
+class _ApiKeyMiddleware:
+    """Pure ASGI middleware: reads X-API-Key header (or ?api_key= query param) into context var."""
+
+    def __init__(self, app):
+        self._app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] in ("http", "websocket"):
+            headers = {k.lower(): v for k, v in scope.get("headers", [])}
+            api_key = headers.get(b"x-api-key", b"").decode().strip()
+            if not api_key:
+                qs = scope.get("query_string", b"").decode()
+                api_key = parse_qs(qs).get("api_key", [""])[0]
+            token = _request_api_key.set(api_key)
+            try:
+                await self._app(scope, receive, send)
+            finally:
+                _request_api_key.reset(token)
+        else:
+            await self._app(scope, receive, send)
+
+
 if __name__ == "__main__":
-    mcp.run()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--sse", action="store_true", help="Run HTTP/SSE server mode")
+    parser.add_argument("--port", type=int, default=8002, help="Port for SSE mode")
+    args, _ = parser.parse_known_args()
+
+    if args.sse:
+        import uvicorn
+        app = _ApiKeyMiddleware(mcp.sse_app())
+        uvicorn.run(app, host="0.0.0.0", port=args.port)
+    else:
+        mcp.run()

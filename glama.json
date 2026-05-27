@@ -1,0 +1,53 @@
+{
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "maintainers": [
+    "0xJZ-index"
+  ],
+  "name": "AletaIndex Narrative Intelligence",
+  "description": "Financial narrative intelligence for AI agents. Tracks how financial stories evolve across thousands of news sources — clustering articles into structured narratives, measuring sentiment momentum, and mapping narrative risk across portfolios. Available for 109 tickers across all major sectors.",
+  "license": "MIT",
+  "homepage": "https://aletaindex-narrative.com",
+  "githubUrl": "https://github.com/AletaIndex/aletaindex-fin-narratives",
+  "tools": [
+    {
+      "name": "get_narratives",
+      "description": "Get financial narrative intelligence for one or more stocks. Returns structured narrative data: persistent story threads, daily article clusters, and sentiment scores.",
+      "parameters": {
+        "tickers": {
+          "type": "string",
+          "description": "Comma-separated ticker symbols (e.g. 'NVDA' or 'NVDA,TSLA,AAPL'). Max 10 per request.",
+          "required": true
+        },
+        "from_date": {
+          "type": "string",
+          "description": "Start date in YYYY-MM-DD format. Defaults to 7 days ago.",
+          "required": false
+        },
+        "to_date": {
+          "type": "string",
+          "description": "End date in YYYY-MM-DD format. Defaults to today.",
+          "required": false
+        }
+      }
+    },
+    {
+      "name": "get_portfolio_risk",
+      "description": "Analyze narrative risk across a portfolio of stocks. Groups narratives by macro theme and identifies concentrated narrative exposure across multiple positions.",
+      "parameters": {
+        "holdings": {
+          "type": "string",
+          "description": "Portfolio as TICKER:WEIGHT pairs, comma-separated (e.g. 'NVDA:0.30,AAPL:0.25,TSLA:0.20,MSFT:0.25'). Max 50 holdings.",
+          "required": true
+        }
+      }
+    }
+  ],
+  "env": [
+    {
+      "name": "NARRATIVE_API_KEY",
+      "description": "API key from aletaindex-narrative.com. Free trial available — 10 tickers, 90 days history, 500 credits.",
+      "required": true,
+      "sensitive": true
+    }
+  ]
+}

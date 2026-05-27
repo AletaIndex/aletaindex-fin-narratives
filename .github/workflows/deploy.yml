@@ -1,0 +1,21 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy MCP SSE server
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H 34.23.7.137 >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/deploy_key info@34.23.7.137 \
+            "sudo git -C /opt/narrative-intelligence-api fetch origin main && \
+             sudo git -C /opt/narrative-intelligence-api reset --hard origin/main && \
+             sudo docker compose -f /opt/narrative-intelligence-api/docker-compose.yml up -d --build"
