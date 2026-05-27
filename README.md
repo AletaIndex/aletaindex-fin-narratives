@@ -35,13 +35,13 @@ No prompt engineering required. The agent knows how to query the data automatica
 
 ## Three Ways to Integrate
 
-### Option A — MCP Directories (Zero install, recommended)
+### Option A — MCP Server via PyPI (Local install, recommended)
+One-line config via `uvx`. Works with Claude Code, Claude Desktop, Cursor, Windsurf, and any MCP-compatible agent.
+→ [MCP Quickstart](mcp/README.md)
+
+### Option B — MCP Directories (Zero install)
 One click on Smithery or Glama. Works with Claude, Cursor, Windsurf, and any MCP-compatible agent — no local setup required.
 → [Add on Smithery](https://smithery.ai/server/jamie-vw4h/aletaindex) · [Add on Glama](https://glama.ai/mcp/servers/AletaIndex/aletaindex-fin-narratives)
-
-### Option B — MCP Server via PyPI (Local install)
-One-line config via `uvx`. Works with Claude Code, Cursor, Windsurf, and any MCP-compatible agent.
-→ [MCP Quickstart](mcp/README.md)
 
 ### Option C — REST API
 Direct HTTP calls. Works with any language or framework.
@@ -67,18 +67,28 @@ Free tickers: `TSLA` `NVDA` `AAPL` `MSFT` `AMZN` `GOOGL` `META` `AMD` `NFLX` `JP
 
 ```python
 import requests
+from datetime import date, timedelta
 
-headers = {"X-API-Key": "nk_your_key_here"}
+API_KEY  = "nk_your_key_here"
+BASE_URL = "https://aletaindex-narrative.com"
 
-response = requests.get(
-    "https://aletaindex-narrative.com/v1/narratives/comprehensive",
-    headers=headers,
-    params={"tickers": "NVDA", "from_date": "2026-05-01", "to_date": "2026-05-10"},
+to_date   = date.today()
+from_date = to_date - timedelta(days=6)  # 7-day window (inclusive)
+
+resp = requests.get(
+    f"{BASE_URL}/v1/narratives/comprehensive",
+    headers={"X-API-Key": API_KEY},
+    params={
+        "tickers":   "NVDA",
+        "from_date": from_date.isoformat(),
+        "to_date":   to_date.isoformat(),
+    },
 )
 
-data = response.json()
+data = resp.json()
 for narrative in data["results"][0]["global_narratives"]:
-    print(narrative["title"], narrative["sentiment"]["avg_sentiment"])
+    sentiment = narrative["sentiment"]
+    print(narrative["title"], "-", sentiment["sentiment_label"], f"({sentiment['avg_sentiment']:.2f})")
 ```
 
 **Example response (truncated):**

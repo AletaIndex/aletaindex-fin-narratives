@@ -48,6 +48,31 @@ Add to `~/.claude/settings.json`:
 
 Restart Claude Code. Done.
 
+### Claude Desktop
+
+Open Claude Desktop → **Claude** menu → **Settings** → **Developer** → **Edit Config**.
+
+Add to `claude_desktop_config.json`:
+
+```json
+{
+  "preferences": { "...existing preferences..." },
+  "mcpServers": {
+    "aletaindex": {
+      "command": "uvx",
+      "args": ["narrative-intelligence-mcp"],
+      "env": {
+        "NARRATIVE_API_KEY": "nk_your_key_here"
+      }
+    }
+  }
+}
+```
+
+Save and **relaunch** Claude Desktop.
+
+---
+
 ### Cursor / Windsurf
 
 Add to your MCP config file:
