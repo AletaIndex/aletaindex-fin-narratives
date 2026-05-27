@@ -8,13 +8,15 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy MCP SSE server
+      - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64 -d > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H 34.23.7.137 >> ~/.ssh/known_hosts
+
+      - name: Deploy MCP SSE server
+        run: |
           ssh -i ~/.ssh/deploy_key info@34.23.7.137 \
             "sudo git -C /opt/narrative-intelligence-api fetch origin main && \
              sudo git -C /opt/narrative-intelligence-api reset --hard origin/main && \

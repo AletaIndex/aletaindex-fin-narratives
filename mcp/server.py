@@ -227,8 +227,15 @@ class _ApiKeyMiddleware:
             headers = {k.lower(): v for k, v in scope.get("headers", [])}
             api_key = headers.get(b"x-api-key", b"").decode().strip()
             if not api_key:
+                api_key = headers.get(b"api_key", b"").decode().strip()
+            if not api_key:
+                auth = headers.get(b"authorization", b"").decode().strip()
+                if auth.lower().startswith("bearer "):
+                    api_key = auth[7:].strip()
+            if not api_key:
                 qs = scope.get("query_string", b"").decode()
-                api_key = parse_qs(qs).get("api_key", [""])[0]
+                params = parse_qs(qs)
+                api_key = params.get("api_key", params.get("apiKey", [""]))[0]
             token = _request_api_key.set(api_key)
             try:
                 await self._app(scope, receive, send)
@@ -247,7 +254,23 @@ if __name__ == "__main__":
 
     if args.sse:
         import uvicorn
-        app = _ApiKeyMiddleware(mcp.sse_app())
+
+        inner = mcp.streamable_http_app()
+
+        class _PathAliasMiddleware:
+            """Rewrite /sse → /mcp so Smithery's cached URL still works."""
+            def __init__(self, app):
+                self._app = app
+            async def __call__(self, scope, receive, send):
+                if scope.get("type") in ("http", "websocket"):
+                    path = scope.get("path", "")
+                    if path == "/sse" or path.startswith("/sse/"):
+                        scope = dict(scope)
+                        scope["path"] = "/mcp" + path[4:]
+                        scope["raw_path"] = scope["path"].encode()
+                await self._app(scope, receive, send)
+
+        app = _ApiKeyMiddleware(_PathAliasMiddleware(inner))
         uvicorn.run(app, host="0.0.0.0", port=args.port)
     else:
         mcp.run()
