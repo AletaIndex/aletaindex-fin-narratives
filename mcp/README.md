@@ -95,6 +95,19 @@ Add to your MCP config file:
 
 ## Step 3 — Start Asking
 
+💡 **For best results**, paste this at the start of your conversation:
+
+```
+You have access to the Aleta Index MCP, which provides narrative intelligence
+derived from institutional news sources.
+
+When analyzing stocks, prioritize the narrative layer: global narratives,
+daily topics, sentiment scores, mention counts, sentiment trends, and
+behavioral patterns. The narrative layer aggregates signal across hundreds
+of sources and contains sufficient information for analysis — avoid reading
+individual article bodies unless specifically necessary.
+```
+
 No setup prompts needed. Just ask naturally:
 
 ```

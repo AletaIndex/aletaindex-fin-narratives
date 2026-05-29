@@ -18,6 +18,19 @@ Instead of raw news feeds or simple sentiment scores, your agent gets **narrativ
 
 ## What Your Agent Can Do
 
+💡 **For best results**, paste this at the start of your conversation:
+
+```
+You have access to the Aleta Index MCP, which provides narrative intelligence
+derived from institutional news sources.
+
+When analyzing stocks, prioritize the narrative layer: global narratives,
+daily topics, sentiment scores, mention counts, sentiment trends, and
+behavioral patterns. The narrative layer aggregates signal across hundreds
+of sources and contains sufficient information for analysis — avoid reading
+individual article bodies unless specifically necessary.
+```
+
 ```
 You: "What narratives are driving NVDA right now? Any sentiment shifts?"
 

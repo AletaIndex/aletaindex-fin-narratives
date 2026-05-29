@@ -1,5 +1,18 @@
 # Strategy Prompt Templates
 
+💡 **For best results**, paste this at the start of your conversation:
+
+```
+You have access to the Aleta Index MCP, which provides narrative intelligence
+derived from institutional news sources.
+
+When analyzing stocks, prioritize the narrative layer: global narratives,
+daily topics, sentiment scores, mention counts, sentiment trends, and
+behavioral patterns. The narrative layer aggregates signal across hundreds
+of sources and contains sufficient information for analysis — avoid reading
+individual article bodies unless specifically necessary.
+```
+
 Copy-paste these prompts into any agent with AletaIndex connected.
 
 These are just starting points — feel free to ask in your own words. The agent understands natural language questions about narratives, sentiment, and portfolio risk. You're not limited to the templates below.
@@ -86,6 +99,34 @@ Which narratives are brand new this week — just emerged?
 Which are ongoing threads that got fresh coverage this week?
 For the most active ones, which specific days had the most articles,
 and what triggered the spike?
+```
+
+---
+
+## Latest Daily Topics Briefing
+
+```
+What's driving TSLA right now? Based on the active global narratives and
+daily topics, walk me through which narrative has the most momentum, how
+overall sentiment has been trending, whether any topics are accelerating
+or fading, any notable behavioral patterns from the historical data, and
+if there are any signals worth watching in the price action. Prioritize
+global narratives, daily topics, and behavioral patterns in your analysis.
+```
+
+---
+
+## Narrative Insight Report
+
+```
+For TSLA, generate a narrative insight report covering:
+- Dominant global narrative and its current sentiment
+- Overall sentiment trend direction (improving or declining)
+- Which daily topics are gaining or losing momentum this week
+- Any behavioral patterns that stand out from the historical data
+- One key risk signal worth watching
+
+Focus on global narratives, daily topics, and behavioral patterns.
 ```
 
 ---
