@@ -1,0 +1,113 @@
+{
+  "tools": [
+    {
+      "name": "get_narratives",
+      "description": "Get financial narrative intelligence for one or more stocks. Returns structured narrative data: persistent story threads (global narratives), daily article clusters, individual articles, and sentiment scores. Use this to understand what stories are driving a stock and how sentiment is evolving.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "tickers": {
+            "type": "string",
+            "description": "Comma-separated ticker symbols. Examples: \"NVDA\" or \"NVDA,TSLA,AAPL\". Maximum 10 tickers per request. Free tier: TSLA, NVDA, AAPL, MSFT, AMZN, GOOGL, META, AMD, NFLX, JPM. Plus/Scale: all 109 tickers."
+          },
+          "from_date": {
+            "type": "string",
+            "description": "Start date in YYYY-MM-DD format. Defaults to 7 days ago."
+          },
+          "to_date": {
+            "type": "string",
+            "description": "End date in YYYY-MM-DD format. Defaults to today."
+          }
+        },
+        "required": ["tickers"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ticker": {"type": "string", "description": "Stock ticker symbol"},
+                "global_narratives": {
+                  "type": "array",
+                  "description": "Persistent narrative threads for this ticker",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "narrative_id": {"type": "integer"},
+                      "title": {"type": "string", "description": "Human-readable narrative title"},
+                      "dominance_score": {"type": "number", "description": "0-1 score indicating narrative strength"},
+                      "is_active": {"type": "boolean"},
+                      "daily_topics": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "event_date": {"type": "string"},
+                            "article_count": {"type": "integer"},
+                            "sentiment": {
+                              "type": "object",
+                              "properties": {
+                                "avg_sentiment": {"type": "number"},
+                                "sentiment_label": {"type": "string"},
+                                "trajectory": {"type": "string"}
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true
+      }
+    },
+    {
+      "name": "get_portfolio_risk",
+      "description": "Analyze narrative risk across a portfolio of stocks. Groups narratives across all holdings by macro theme (e.g. \"AI Regulation\", \"Interest Rate Sensitivity\") and identifies which stories create concentrated narrative exposure across multiple positions simultaneously.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "holdings": {
+            "type": "string",
+            "description": "Portfolio positions as TICKER:WEIGHT pairs, comma-separated. Weights represent portfolio allocation (should sum to ~1.0). Example: \"NVDA:0.30,AAPL:0.25,TSLA:0.20,MSFT:0.25\". Maximum 50 holdings."
+          }
+        },
+        "required": ["holdings"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "macro_themes": {
+            "type": "array",
+            "description": "Cross-portfolio narrative risk themes",
+            "items": {
+              "type": "object",
+              "properties": {
+                "theme": {"type": "string", "description": "Macro narrative theme name"},
+                "affected_tickers": {"type": "array", "items": {"type": "string"}},
+                "weighted_exposure": {"type": "number", "description": "Portfolio-weighted exposure score 0-1"},
+                "dominant_narratives": {"type": "array", "items": {"type": "string"}},
+                "sentiment_trajectory": {"type": "string"}
+              }
+            }
+          },
+          "concentration_score": {"type": "number", "description": "Overall narrative concentration risk 0-1"}
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": true
+      }
+    }
+  ]
+}
