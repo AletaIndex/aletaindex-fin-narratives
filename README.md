@@ -2,7 +2,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/narrative-intelligence-mcp?label=PyPI&color=blue)](https://pypi.org/project/narrative-intelligence-mcp/)
 [![Python](https://img.shields.io/pypi/pyversions/narrative-intelligence-mcp)](https://pypi.org/project/narrative-intelligence-mcp/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Smithery](https://smithery.ai/badge/jamie-vw4h/aletaindex)](https://smithery.ai/server/jamie-vw4h/aletaindex)
 [![Glama](https://img.shields.io/badge/Glama-MCP_Directory-orange)](https://glama.ai/mcp/servers/AletaIndex/aletaindex-fin-narratives)
 

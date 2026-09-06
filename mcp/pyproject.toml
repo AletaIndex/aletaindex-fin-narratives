@@ -1,10 +1,10 @@
 [project]
 name = "narrative-intelligence-mcp"
-version = "0.1.3"
+version = "0.1.4"
 description = "MCP server for AletaIndex — financial narrative intelligence for AI agents"
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = { text = "Apache-2.0" }
 authors = [{ name = "AletaIndex", email = "info@aletaindex-narrative.com" }]
 keywords = ["mcp", "finance", "narratives", "sentiment", "stocks", "AI", "agents"]
 classifiers = [
